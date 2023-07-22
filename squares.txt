@@ -1,7 +1,7 @@
 {
     0: {
         'name': 'Go',
-        'type': 'corner',
+        'type': 'go',
     },
     1: {
         'name': 'Mediterranean Avenue',
