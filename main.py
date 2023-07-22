@@ -23,7 +23,7 @@ def start() -> Game:
         player_list.append(
             Player(
                 location=all_squares[0],
-                balance=0,
+                balance=1500,
                 properties=None,
                 extras=None
             )
@@ -41,5 +41,5 @@ squares = game.squares
 count = 1
 
 for player in players:
-    print(f"Player {count} is at: {player.location.name} with balance {player.balance}")
+    print(f"Player {count} is at: {player.location.name} with balance: ${player.balance}")
     count += 1
