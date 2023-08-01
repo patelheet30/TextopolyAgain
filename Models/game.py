@@ -1,6 +1,7 @@
 from Models.player import Player
 from Models.Property import Street, Tax, Utility, Railroad, ComChest, Chance, Corner
 from Utils.get_player_properties import get_player_properties_names
+from Utils.buying import buying_properties
 
 from random import randint
 
@@ -40,7 +41,6 @@ class Game:
             player.change_location(self._squares[ploc_in_squares])
             return player.location.name
 
-
     def start(self):
         while True:
             for player in self._players:
@@ -49,19 +49,6 @@ class Game:
                 self._rolled_dice = (randint(1, 6), randint(1, 6))
                 self.move_player(player, self._rolled_dice)
                 location: Street | Utility | Railroad = player.location
-                correct_type = ("Street", "Utility", "Railroad")
+
                 print(f"You are player: {player.name} and you currently have {player.balance} and own {get_player_properties_names(player)}")
-                if location.property_type in correct_type:
-                    if location.owner == "none":
-                        print(f"The location you've landed is {location.name} and is currently unowned")
-                        print(f"Do you want to buy {location.name} for {location.price}?")
-                        answer = input("Enter yes or no: ")
-                        if answer == "yes":
-                            location.buy(answer, player)
-                            print("You've bought the location. Congrats.")
-                        else:
-                            location.buy(answer, player)
-                    else:
-                        print(f"The location you've landed is {location.name} and is currently owned by {location.owner.name}")
-                else:
-                    print(f"The location is {location.name}")
+                print(buying_properties(player, location))
