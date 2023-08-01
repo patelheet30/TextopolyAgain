@@ -13,24 +13,16 @@ class Game:
                  squares: dict[int, Street | Tax | Utility | Railroad | ComChest | Chance | Corner]
                  ):
         self._rolled_dice = None
-        self._players = players
-        self._squares = squares
-
-    @property
-    def players(self):
-        return self._players
-
-    @property
-    def squares(self):
-        return self._squares
+        self.players = players
+        self.squares = squares
 
     def move_player(self,
                     player: Player,
                     rolled_dice: tuple[int, int]
                     ):
-        if player in self._players:
+        if player in self.players:
             player_location = player.location
-            ploc_in_squares = [key for key in self._squares if self._squares[key] == player_location][0]
+            ploc_in_squares = [key for key in self.squares if self.squares[key] == player_location][0]
             move_points = rolled_dice[0] + rolled_dice[1]
             if ploc_in_squares + move_points > 39:
                 ploc_in_squares += (39 - ploc_in_squares)
@@ -38,12 +30,12 @@ class Game:
             else:
                 ploc_in_squares += move_points
 
-            player.change_location(self._squares[ploc_in_squares])
+            player.change_location(self.squares[ploc_in_squares])
             return player.location.name
 
     def start(self):
         while True:
-            for player in self._players:
+            for player in self.players:
                 input("Enter to continue...")
 
                 self._rolled_dice = (randint(1, 6), randint(1, 6))
@@ -52,3 +44,11 @@ class Game:
 
                 print(f"You are player: {player.name} and you currently have {player.balance} and own {get_player_properties_names(player)}")
                 print(buying_properties(player, location))
+
+                if player.balance < 0:
+                    print("You are bankrupt.")
+                    self.players.remove(player)
+
+                if len(self.players) == 1:
+                    print(f"Player {self.players[0].name} won the game.")
+                    return
