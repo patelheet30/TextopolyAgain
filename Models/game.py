@@ -1,6 +1,6 @@
 from Models.player import Player
 from Models.Property import Street, Tax, Utility, Railroad, ComChest, Chance, Corner
-from Utils.get_player_properties import get_player_properties_names
+from Utils.properties import get_player_properties_names, check_type, pay_tax
 from Utils.buying import buying_properties
 
 from random import randint
@@ -41,6 +41,9 @@ class Game:
                 self._rolled_dice = (randint(1, 6), randint(1, 6))
                 self.move_player(player, self._rolled_dice)
                 location: Street | Utility | Railroad = player.location
+                check_type(location)
+                if check_type(location) == Tax:
+                    pay_tax(player, location)
 
                 print(f"You are player: {player.name} and you currently have {player.balance} and own {get_player_properties_names(player)}")
                 print(buying_properties(player, location))
