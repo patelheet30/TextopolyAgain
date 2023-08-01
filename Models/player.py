@@ -6,13 +6,14 @@ class Player:
             location,
             balance: int,
             properties: list | None,
-            extras: dict[str, str] | None
+            extras: dict[str, int] | None
     ):
         self._name = name
         self.location = location
         self.balance = balance
         self.properties = properties
         self.extras = extras
+        self.in_jail = False
 
 
     @property
@@ -35,8 +36,14 @@ class Player:
     def extras(self):
         return self.extras
 
+    def in_jail(self):
+        return self.in_jail
+
     def add_balance(self, value):
         self.balance += value
 
     def remove_balance(self, value):
         self.balance -= value
+
+    def get_out_of_jail(self):
+        pass

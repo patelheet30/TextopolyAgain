@@ -3,7 +3,7 @@ from Models.Property import Street, Tax, Utility, Railroad, ComChest, Chance, Co
 
 
 def load_squares() -> dict[int, Street | Tax | Utility | Railroad | ComChest | Chance | Corner]:
-    with open("./squares.txt", "r") as squaresFile:
+    with open("./Data/squares.txt", "r") as squaresFile:
         squares = eval(squaresFile.read())
 
     all_squares: dict[int, Street | Tax | Utility | Railroad | ComChest | Chance | Corner] = {}

@@ -5,7 +5,7 @@ def buying_properties(player, location):
             print(f"The location you've landed is {location.name} and is currently unowned")
             print(f"Do you want to buy {location.name} for {location.price}?")
             answer = input("Enter yes or no: ")
-            if answer == "yes":
+            if answer.lower() == "yes":
                 location.buy(answer, player)
                 return "You've bought the location. Congrats."
             else:

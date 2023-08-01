@@ -26,7 +26,10 @@ def start() -> Game:
                 location=all_squares[0],
                 balance=1500,
                 properties=[],
-                extras=None
+                extras={
+                    "turn_in_jails": 0,
+                    "double_rolls": 0
+                }
             )
         )
         count += 1
