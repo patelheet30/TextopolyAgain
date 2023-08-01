@@ -1,6 +1,6 @@
 from Models.game import Game
 from Models.player import Player
-from property_collecters import load_squares
+from Utils.property_collection import load_squares
 
 
 def start() -> Game:
@@ -18,16 +18,18 @@ def start() -> Game:
             raise ValueError
         except ValueError:
             print("Enter a valid number")
-
-    for count in range(0, player_count):
+    count = 1
+    for _ in range(0, player_count):
         player_list.append(
             Player(
+                name=count,
                 location=all_squares[0],
                 balance=1500,
-                properties=None,
+                properties=[],
                 extras=None
             )
         )
+        count += 1
 
     return Game(
         players=player_list,
@@ -38,8 +40,5 @@ def start() -> Game:
 game = start()
 players = game.players
 squares = game.squares
-count = 1
 
-for player in players:
-    print(f"Player {count} is at: {player.location.name} with balance: ${player.balance}")
-    count += 1
+game.start()

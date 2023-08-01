@@ -1,3 +1,6 @@
+from Models.player import Player
+
+
 class Property:
 
     def __init__(self, name: str, property_type: str):
@@ -17,7 +20,7 @@ class Street(Property):
 
     def __init__(self, name: str, price: int, property_type: str, color: str, improvement_lvl: int = 0,
                  improvement_price: int = 0, mortgaged: bool = False, rent_levels: dict[int, int] = None,
-                 owner=None):
+                 owner: Player = None):
         super().__init__(name, property_type)
         self._price = price
         self._color = color
@@ -42,6 +45,18 @@ class Street(Property):
     @property
     def rent_levels(self):
         return self._rent_levels
+
+    def owner(self):
+        return self.owner
+
+    def buy(self, answer: str, player: Player):
+        if answer == "yes":
+            player.remove_balance(self._price)
+            self.owner = player
+            player.properties.append(self)
+            return "You now own this property."
+        else:
+            return "Going for auction..."
 
 
 class Tax(Property):
@@ -73,6 +88,18 @@ class Railroad(Property):
     def rent_levels(self):
         return self._rent_levels
 
+    def owner(self):
+        return self.owner
+
+    def buy(self, answer: str, player: Player):
+        if answer == "yes":
+            player.remove_balance(self._price)
+            self.owner = player
+            player.properties.append(self)
+            return "You now own this property."
+        else:
+            return "Going for auction..."
+
 
 class Utility(Property):
 
@@ -87,6 +114,18 @@ class Utility(Property):
     @property
     def price(self):
         return self._price
+
+    def owner(self):
+        return self.owner
+
+    def buy(self, answer: str, player: Player):
+        if answer == "yes":
+            player.remove_balance(self._price)
+            self.owner = player
+            player.properties.append(self)
+            return "You now own this property."
+        else:
+            return "Going for auction..."
 
 
 class ComChest(Property):

@@ -1,22 +1,30 @@
-from Models.Property import Street, Tax, Utility, Railroad, ComChest, Chance, Corner
-
-
 class Player:
 
     def __init__(
             self,
-            location: Street | Tax | Utility | Railroad | ComChest | Chance | Corner,
+            name: int,
+            location,
             balance: int,
-            properties: dict[int, Street | Tax | Utility | Railroad | ComChest | Chance | Corner] | None,
+            properties: list | None,
             extras: dict[str, str] | None
     ):
+        self._name = name
         self.location = location
         self.balance = balance
         self.properties = properties
         self.extras = extras
 
-    def location(self) -> Street | Tax | Utility | Railroad | ComChest | Chance | Corner:
+
+    @property
+    def name(self):
+        return self._name
+
+    def location(self):
         return self.location.name
+
+    def change_location(self, value):
+        self.location = value
+        return self.location
 
     def balance(self):
         return self.balance
