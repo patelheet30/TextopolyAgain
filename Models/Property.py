@@ -77,6 +77,22 @@ class Street(Property):
         else:
             return "You don't have all the properties of this color."
 
+    def remove_house(self, player: Player):
+        if self.improvement_lvl > 0:
+            self.improvement_lvl -= 1
+            player.add_balance(self.improvement_price * 0.5)
+            return "You've removed a house."
+        else:
+            return "You don't have any houses on this property."
+
+    def sell(self, player: Player):
+        if self.improvement_lvl == 0:
+            player.add_balance(self._price * 0.5)
+            self.owner = None
+            player.properties.remove(self)
+            return "You've sold this property."
+        else:
+            return "You can't sell this property because it has houses on it."
 
 
 class Tax(Property):
@@ -132,10 +148,6 @@ class Railroad(Property):
             if isinstance(_, Railroad):
                 _.improvement_lvl = self.improvement_lvl
 
-    def can_you_build_houses(self):
-        return False
-
-
 
 class Utility(Property):
 
@@ -162,9 +174,6 @@ class Utility(Property):
             return "You now own this property."
         else:
             return "Going for auction..."
-
-    def can_you_build_houses(self):
-        return False
 
 
 class ComChest(Property):

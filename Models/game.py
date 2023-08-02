@@ -1,6 +1,7 @@
 from Models.player import Player
 from Models.Property import Street, Tax, Utility, Railroad, ComChest, Chance, Corner
-from Utils.properties import get_player_properties_names, check_type, get_player_properties, get_colors, build_house
+from Utils.properties import get_player_properties_names, check_type, get_player_properties, get_colors, build_house, \
+    remove_house, sell_property
 from Utils.buying import buying_properties
 
 from random import randint
@@ -75,6 +76,10 @@ class Game:
                         print(player.location.name)
                     elif choices == 5:
                         print(build_house(player))
+                    elif choices == 6:
+                        print(remove_house(player))
+                    elif choices == 9:
+                        print(sell_property(player))
                     elif choices == 10:
                         print(get_colors(player))
                     elif choices == 11:
