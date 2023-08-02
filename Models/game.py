@@ -1,6 +1,6 @@
 from Models.player import Player
 from Models.Property import Street, Tax, Utility, Railroad, ComChest, Chance, Corner
-from Utils.properties import get_player_properties_names, check_type, pay_tax
+from Utils.properties import get_player_properties_names, check_type, get_player_properties, get_colors, build_house
 from Utils.buying import buying_properties
 
 from random import randint
@@ -47,20 +47,42 @@ class Game:
                      6. Sell houses/hotels
                      7. Mortgage properties
                      8. Unmortgage properties
+                     9. Sell properties
+                     10. Color Group Information
+                     11. Continue
                      """
                 )
                 move_on = False
+                rolled_dice = False
                 while not move_on:
-                    choices = int(input("Enter your choice: "))
+                    try:
+                        choices = int(input(f"Enter your choice ({player.name}): "))
+                    except ValueError:
+                        choices = 2
                     if choices == 1:
-                        self.move_the_player(player)
-                        move_on = True
+                        if rolled_dice:
+                            move_on = True
+                            print("You have already rolled the dice.")
+                        else:
+                            rolled_dice = True
+                            self.move_the_player(player)
                     elif choices == 2:
                         print(get_player_properties_names(player))
+                        print(get_player_properties(player))
                     elif choices == 3:
                         print(player.balance)
                     elif choices == 4:
                         print(player.location.name)
+                    elif choices == 5:
+                        print(build_house(player))
+                    elif choices == 10:
+                        print(get_colors(player))
+                    elif choices == 11:
+                        if rolled_dice:
+                            move_on = True
+                            print("Moving on...")
+                        else:
+                            print("You have to roll the dice first.")
 
                 if player.balance < 0:
                     print("You are bankrupt.")
@@ -73,10 +95,10 @@ class Game:
     def move_the_player(self, player):
         self._rolled_dice = (randint(1, 6), randint(1, 6))
         self.move_player(player, self._rolled_dice)
-        location: Street | Utility | Railroad = player.location
+        location: Street | Utility | Railroad | Tax = player.location
         check_type(location)
 
         if check_type(location) == Tax:
-            pay_tax(player, location)
-
-        print(buying_properties(player, location))
+            location.pay_tax(player)
+        complete_roll_size = self._rolled_dice[0] + self._rolled_dice[1]
+        print(buying_properties(player, location, complete_roll_size))

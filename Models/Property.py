@@ -1,4 +1,5 @@
 from Models.player import Player
+from Utils.properties import get_colors, colour_sizes
 
 
 class Property:
@@ -58,6 +59,25 @@ class Street(Property):
         else:
             return "Going for auction..."
 
+    def can_you_build_houses(self):
+        player_colors = get_colors(self.owner)
+        if self.color in player_colors:
+            if player_colors[self.color] == colour_sizes[self.color]:
+                return True
+        return False
+
+    def build_house(self, player: Player):
+        if self.can_you_build_houses():
+            if player.balance >= self.improvement_price:
+                player.remove_balance(self.improvement_price)
+                self.improvement_lvl += 1
+                return "You've built a house."
+            else:
+                return "You don't have enough money to build a house."
+        else:
+            return "You don't have all the properties of this color."
+
+
 
 class Tax(Property):
 
@@ -96,15 +116,31 @@ class Railroad(Property):
             player.remove_balance(self._price)
             self.owner = player
             player.properties.append(self)
+            self.update_improvement_level()
             return "You now own this property."
         else:
             return "Going for auction..."
+
+    def update_improvement_level(self):
+        owner_properties = self.owner.properties
+        railroad_count = 0
+        for _ in owner_properties:
+            if isinstance(_, Railroad):
+                railroad_count += 1
+        self.improvement_lvl += railroad_count - 1
+        for _ in owner_properties:
+            if isinstance(_, Railroad):
+                _.improvement_lvl = self.improvement_lvl
+
+    def can_you_build_houses(self):
+        return False
+
 
 
 class Utility(Property):
 
     def __init__(self, name: str, property_type: str, price: int, improvement_lvl: int = 0, mortgaged: bool = False,
-                 owner=None):
+                 owner: Player = None):
         super().__init__(name, property_type)
         self._price = price
         self.improvement_lvl = improvement_lvl
@@ -126,6 +162,9 @@ class Utility(Property):
             return "You now own this property."
         else:
             return "Going for auction..."
+
+    def can_you_build_houses(self):
+        return False
 
 
 class ComChest(Property):
