@@ -50,6 +50,9 @@ class Street(Property):
     def owner(self):
         return self.owner
 
+    def is_mortgaged(self):
+        return self.mortgaged
+
     def buy(self, answer: str, player: Player):
         if answer == "yes":
             player.remove_balance(self._price)
@@ -94,15 +97,21 @@ class Street(Property):
         else:
             return "You can't sell this property because it has houses on it."
 
+    def mortgage(self):
+        if self.mortgaged:
+            return False
+        if self.improvement_lvl > 0:
+            return False
+        self.mortgaged = True
+        self.owner.add_balance(self._price * 0.5)
+        return True
 
-class Tax(Property):
-
-    def __init__(self, tax, name: str, property_type: str):
-        super().__init__(name, property_type)
-        self._tax = tax
-
-    def pay_tax(self, player):
-        player.remove_balance(self._tax)
+    def unmortgage(self):
+        if not self.mortgaged:
+            return False
+        self.mortgaged = False
+        self.owner.remove_balance(self._price * 0.6)
+        return True
 
 
 class Railroad(Property):
@@ -127,6 +136,9 @@ class Railroad(Property):
     def owner(self):
         return self.owner
 
+    def is_mortgaged(self):
+        return self.mortgaged
+
     def buy(self, answer: str, player: Player):
         if answer == "yes":
             player.remove_balance(self._price)
@@ -148,6 +160,18 @@ class Railroad(Property):
             if isinstance(_, Railroad):
                 _.improvement_lvl = self.improvement_lvl
 
+    def mortgage(self):
+        self.mortgaged = True
+        self.owner.add_balance(self._price * 0.5)
+        return True
+
+    def unmortgage(self):
+        if not self.mortgaged:
+            return False
+        self.mortgaged = False
+        self.owner.remove_balance(self._price * 0.6)
+        return True
+
 
 class Utility(Property):
 
@@ -166,6 +190,9 @@ class Utility(Property):
     def owner(self):
         return self.owner
 
+    def is_mortgaged(self):
+        return self.mortgaged
+
     def buy(self, answer: str, player: Player):
         if answer == "yes":
             player.remove_balance(self._price)
@@ -174,6 +201,28 @@ class Utility(Property):
             return "You now own this property."
         else:
             return "Going for auction..."
+
+    def mortgage(self):
+        self.mortgaged = True
+        self.owner.add_balance(self._price * 0.5)
+        return True
+
+    def unmortgage(self):
+        if not self.mortgaged:
+            return False
+        self.mortgaged = False
+        self.owner.remove_balance(self._price * 0.6)
+        return True
+
+
+class Tax(Property):
+
+    def __init__(self, tax, name: str, property_type: str):
+        super().__init__(name, property_type)
+        self._tax = tax
+
+    def pay_tax(self, player):
+        player.remove_balance(self._tax)
 
 
 class ComChest(Property):

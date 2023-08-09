@@ -25,6 +25,9 @@ def buying_properties(player, location, roll_size):
 
 
 def determineRent(location, player, roll_size):
+    rent_price = 0
+    if location.is_mortgaged():
+        return 0
     utility_count = 0
     if player != location.owner:
         if location.property_type == "Utility":

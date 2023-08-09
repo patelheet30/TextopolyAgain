@@ -79,3 +79,41 @@ colour_sizes = {
     "darkBlue": 2,
 
 }
+
+
+def mortgage(player):
+    where_to_mortgage = input("Where do you want to mortgage a property? ")
+
+    completed = False
+    is_mortgaged = False
+
+    for _ in player.properties:
+        if _.name == where_to_mortgage:
+            is_mortgaged = _.mortgage()
+            completed = True
+        else:
+            continue
+
+    if completed and is_mortgaged:
+        return "You've mortgaged this property."
+    else:
+        return "You don't own this property, or it's already mortgaged or invalid property name or it has houses on it."
+
+
+def unmortgage(player):
+    where_to_unmortgage = input("Where do you want to unmortgage a property? ")
+
+    completed = False
+    is_unmortgaged = False
+
+    for _ in player.properties:
+        if _.name == where_to_unmortgage:
+            is_unmortgaged = _.unmortgage()
+            completed = True
+        else:
+            continue
+
+    if completed and is_unmortgaged:
+        return "You've unmortgaged this property."
+    else:
+        return "You don't own this property, or it's already unmortgaged or invalid property name."

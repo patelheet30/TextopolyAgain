@@ -1,7 +1,7 @@
 from Models.player import Player
 from Models.Property import Street, Tax, Utility, Railroad, ComChest, Chance, Corner
 from Utils.properties import get_player_properties_names, check_type, get_player_properties, get_colors, build_house, \
-    remove_house, sell_property
+    remove_house, sell_property, mortgage, unmortgage
 from Utils.buying import buying_properties
 
 from random import randint
@@ -35,17 +35,41 @@ class Game:
             return player.location.name
 
     def start(self):
+        """
+        Choices:
+        1. Roll dice # Done
+        2. View your properties # Done - Clean Up
+        3. View your balance # Done
+        4. View your location # Done
+        5. Build houses/hotels # Done
+        6. Sell houses/hotel # Done
+        7. Mortgage properties # Done
+        8. Unmortgage properties # Done
+        9. Sell properties # Done
+        10. Color Group Information # Done
+        11. Continue # Done
+
+        Add to the game:
+        1. Jail - Important
+        2. Chance
+        3. Community Chest
+        4. View other players properties
+        5. Trade
+        6. Auction
+        7. A GUI to see information cleanly
+        8. A rework to moving and renting. - Important
+        """
         while True:
             for player in self.players:
                 input("Enter to continue...")
                 print(
                     """What would you like to do:
-                     1. Roll dice
+                     1. Roll dice # Done
                      2. View your properties
                      3. View your balance
                      4. View your location
                      5. Build houses/hotels
-                     6. Sell houses/hotels
+                     6. Sell houses/hotel
                      7. Mortgage properties
                      8. Unmortgage properties
                      9. Sell properties
@@ -78,6 +102,10 @@ class Game:
                         print(build_house(player))
                     elif choices == 6:
                         print(remove_house(player))
+                    elif choices == 7:
+                        print(mortgage(player))
+                    elif choices == 8:
+                        print(unmortgage(player))
                     elif choices == 9:
                         print(sell_property(player))
                     elif choices == 10:
