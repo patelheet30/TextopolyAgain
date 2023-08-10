@@ -27,7 +27,7 @@ def get_type(property_getter: dict[str | Models.player.Player | int | dict | boo
             improvement_price=property_getter["improvement_price"],
             mortgaged=property_getter["mortgaged"],
             rent_levels=property_getter["rent_levels"],
-            owner=property_getter["owner"]
+            owner=None
         )
     elif property_getter["type"] == "tax":
         return Tax(
@@ -42,7 +42,7 @@ def get_type(property_getter: dict[str | Models.player.Player | int | dict | boo
             property_type=property_getter["type"],
             improvement_lvl=property_getter["improvement_lvl"],
             mortgaged=property_getter["mortgaged"],
-            owner=property_getter["owner"]
+            owner=None
         )
     elif property_getter["type"] == "railroad":
         return Railroad(
@@ -52,7 +52,7 @@ def get_type(property_getter: dict[str | Models.player.Player | int | dict | boo
             improvement_lvl=property_getter["improvement_lvl"],
             mortgaged=property_getter["mortgaged"],
             rent_levels=property_getter["rent_levels"],
-            owner=property_getter["owner"]
+            owner=None
         )
     elif property_getter["type"] == "comChest":
         return ComChest(

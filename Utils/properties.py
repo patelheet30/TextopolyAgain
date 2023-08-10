@@ -1,3 +1,5 @@
+import Models.Property
+
 def get_player_properties_names(player):
     properties = player.properties
     names = []
@@ -35,9 +37,12 @@ def build_house(player):
     where_to_build = input("Where do you want to build a house? ")
     for _ in player.properties:
         if _.name == where_to_build:
-            if _.can_you_build_houses:
-                _.build_house(player)
-                return "You've built a house."
+            if isinstance(_, Models.Property.Street):
+                if _.can_you_build_houses():
+                    _.build_house(player)
+                    return "You've built a house."
+                else:
+                    return "You can't build a house here."
             else:
                 return "You can't build a house here."
         else:

@@ -2,7 +2,7 @@ from Models.player import Player
 from Models.Property import Street, Tax, Utility, Railroad, ComChest, Chance, Corner
 from Utils.properties import get_player_properties_names, check_type, get_player_properties, get_colors, build_house, \
     remove_house, sell_property, mortgage, unmortgage
-from Utils.buying import buying_properties
+from Utils.moving import check_movement
 
 from random import randint
 
@@ -57,14 +57,13 @@ class Game:
         5. Trade
         6. Auction
         7. A GUI to see information cleanly
-        8. A rework to moving and renting. - Important
         """
         while True:
             for player in self.players:
                 input("Enter to continue...")
                 print(
                     """What would you like to do:
-                     1. Roll dice # Done
+                     1. Roll dice
                      2. View your properties
                      3. View your balance
                      4. View your location
@@ -134,4 +133,8 @@ class Game:
         if check_type(location) == Tax:
             location.pay_tax(player)
         complete_roll_size = self._rolled_dice[0] + self._rolled_dice[1]
-        print(buying_properties(player, location, complete_roll_size))
+        movement = check_movement(player, location, complete_roll_size)
+        if movement is None:
+            pass
+        else:
+            print(movement)

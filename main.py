@@ -3,7 +3,7 @@ from Models.player import Player
 from Utils.property_collection import load_squares
 
 
-def start() -> Game:
+def setup() -> Game:
     print("Game is initialising...")
 
     all_squares = load_squares()
@@ -40,7 +40,7 @@ def start() -> Game:
     )
 
 
-game = start()
+game = setup()
 players = game.players
 squares = game.squares
 
