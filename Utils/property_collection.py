@@ -1,4 +1,4 @@
-import Models.player
+import Models.Player
 from Models.Property import Street, Tax, Utility, Railroad, ComChest, Chance, Corner
 
 
@@ -16,7 +16,7 @@ def load_squares() -> dict[int, Street | Tax | Utility | Railroad | ComChest | C
 
 
 
-def get_type(property_getter: dict[str | Models.player.Player | int | dict | bool | None]) -> Street | Tax | Utility | Railroad | ComChest | Chance | Corner | str:
+def get_type(property_getter: dict[str | Models.Player.Player | int | dict | bool | None]) -> Street | Tax | Utility | Railroad | ComChest | Chance | Corner | str:
     if property_getter["type"] == "street":
         return Street(
             name=property_getter["name"],

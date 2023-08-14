@@ -6,14 +6,15 @@ class Player:
             location,
             balance: int,
             properties: list | None,
-            extras: dict[str, int] | None
     ):
         self._name = name
         self.location = location
         self.balance = balance
         self.properties = properties
-        self.extras = extras
         self.in_jail = False
+        self.jail_turns = 0
+        self.previous_dice_role = None
+        self.double_roll_count = 0
 
 
     @property
@@ -45,5 +46,17 @@ class Player:
     def remove_balance(self, value):
         self.balance -= value
 
-    def get_out_of_jail(self):
-        pass
+    def turns_in_jail(self):
+        return self.jail_turns
+
+    def add_turn_in_jail(self):
+        self.jail_turns += 1
+        return self.jail_turns
+
+    def put_in_jail(self):
+        self.in_jail = True
+        return self.in_jail
+
+    def get_out_jail(self):
+        self.in_jail = False
+        return self.in_jail

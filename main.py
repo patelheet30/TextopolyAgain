@@ -1,5 +1,5 @@
-from Models.game import Game
-from Models.player import Player
+from Models.Game import Game
+from Models.Player import Player
 from Utils.property_collection import load_squares
 
 
@@ -25,11 +25,7 @@ def setup() -> Game:
                 name=count,
                 location=all_squares[0],
                 balance=1500,
-                properties=[],
-                extras={
-                    "turn_in_jails": 0,
-                    "double_rolls": 0
-                }
+                properties=[]
             )
         )
         count += 1

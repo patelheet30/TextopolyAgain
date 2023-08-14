@@ -2,9 +2,10 @@ from Models.Property import *
 from Utils.properties import check_type
 
 
-def check_movement(player, location, completed_roll_size):
+def check_movement(player, location, roll_tuple):
 
-    print("You rolled a", completed_roll_size)
+    print("You rolled a", roll_tuple[0], "and a", roll_tuple[1])
+    completed_roll_size = roll_tuple[0] + roll_tuple[1]
     print("You are now on", location.name)
     print("You are on a", location.property_type)
 

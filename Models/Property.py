@@ -1,4 +1,4 @@
-from Models.player import Player
+from Models.Player import Player
 from Utils.properties import get_colors, colour_sizes
 
 

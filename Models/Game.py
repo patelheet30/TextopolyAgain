@@ -1,4 +1,4 @@
-from Models.player import Player
+from Models.Player import Player
 from Models.Property import Street, Tax, Utility, Railroad, ComChest, Chance, Corner
 from Utils.properties import get_player_properties_names, check_type, get_player_properties, get_colors, build_house, \
     remove_house, sell_property, mortgage, unmortgage
@@ -9,18 +9,20 @@ from random import randint
 
 class Game:
 
-    def __init__(self,
-                 players: list[Player],
-                 squares: dict[int, Street | Tax | Utility | Railroad | ComChest | Chance | Corner]
-                 ):
+    def __init__(
+            self,
+            players: list[Player],
+            squares: dict[int, Street | Tax | Utility | Railroad | ComChest | Chance | Corner]
+            ):
         self._rolled_dice = None
         self.players = players
         self.squares = squares
 
-    def move_player(self,
-                    player: Player,
-                    rolled_dice: tuple[int, int]
-                    ):
+    def move_player(
+            self,
+            player: Player,
+            rolled_dice: tuple[int, int]
+            ):
         if player in self.players:
             player_location = player.location
             ploc_in_squares = [key for key in self.squares if self.squares[key] == player_location][0]
@@ -31,8 +33,50 @@ class Game:
             else:
                 ploc_in_squares += move_points
 
-            player.change_location(self.squares[ploc_in_squares])
-            return player.location.name
+            player.previous_dice_role = rolled_dice
+            if player.double_roll_count == 3:
+                player.change_location(self.squares[10])
+                player.in_jail = True
+                player.jail_turns = 0
+                player.double_roll_count = 0
+                return player.location.name
+
+            if not player.in_jail:
+                player.change_location(self.squares[ploc_in_squares])
+                if player.location == self.squares[29]:
+                    player.location = self.squares[10]
+                    player.in_jail = True
+                    player.jail_turns = 0
+                return player.location.name
+            else:
+                self.jail_handler(player, rolled_dice)
+
+    def jail_handler(self, player, dice_roll):
+        if player.jail_turns == 3:
+            player.remove_balance(50)
+            player.in_jail = False
+            player.jail_turns = 0
+            self.move_player(player, dice_roll)
+        else:
+            print("""
+                You are in jail. What would you like to do:
+                1. Pay $50 to get out of jail
+                2. Roll dice
+                3. Use a get out of jail free card
+            """)
+            choices = int(input("Enter your choice: "))
+            if choices == 1:
+                player.remove_balance(50)
+                player.in_jail = False
+                player.jail_turns = 0
+                self.move_player(player, dice_roll)
+            if choices == 2:
+                if dice_roll[0] == dice_roll[1]:
+                    player.in_jail = False
+                    player.jail_turns = 0
+                    self.move_player(player, dice_roll)
+                else:
+                    player.jail_turns += 1
 
     def start(self):
         """
@@ -62,7 +106,7 @@ class Game:
             for player in self.players:
                 input("Enter to continue...")
                 print(
-                    """What would you like to do:
+                        """What would you like to do:
                      1. Roll dice
                      2. View your properties
                      3. View your balance
@@ -80,7 +124,7 @@ class Game:
                 rolled_dice = False
                 while not move_on:
                     try:
-                        choices = int(input(f"Enter your choice ({player.name}): "))
+                        choices = int(input(f"Enter your choice (Player {player.name}): "))
                     except ValueError:
                         choices = 2
                     if choices == 1:
@@ -125,16 +169,20 @@ class Game:
                     return
 
     def move_the_player(self, player):
-        self._rolled_dice = (randint(1, 6), randint(1, 6))
-        self.move_player(player, self._rolled_dice)
-        location: Street | Utility | Railroad | Tax = player.location
-        check_type(location)
+        double_roll = True
+        while double_roll:
+            self._rolled_dice = (randint(1, 6), randint(1, 6))
+            double_roll = self._rolled_dice[0] == self._rolled_dice[1]
+            if double_roll:
+                player.double_roll_count += 1
+            else:
+                player.double_roll_count = 0
+            self.move_player(player, self._rolled_dice)
+            location: Street | Utility | Railroad | Tax = player.location
+            check_type(location)
 
-        if check_type(location) == Tax:
-            location.pay_tax(player)
-        complete_roll_size = self._rolled_dice[0] + self._rolled_dice[1]
-        movement = check_movement(player, location, complete_roll_size)
-        if movement is None:
-            pass
-        else:
-            print(movement)
+            if check_type(location) == Tax:
+                location.pay_tax(player)
+            movement = check_movement(player, location, self._rolled_dice)
+            if movement is not None:
+                print(movement)
