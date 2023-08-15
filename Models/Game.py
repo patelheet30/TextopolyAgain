@@ -91,16 +91,17 @@ class Game:
         8. Unmortgage properties # Done
         9. Sell properties # Done
         10. Color Group Information # Done
+        11. Trade # Not Done
+        12. View other players properties # Not Done
         11. Continue # Done
 
         Add to the game:
-        1. Jail - Important
-        2. Chance
-        3. Community Chest
-        4. View other players properties
-        5. Trade
-        6. Auction
-        7. A GUI to see information cleanly
+        1. Chance
+        2. Community Chest
+        3. View other players properties
+        4. Trade
+        5. Auction
+        6. A GUI to see information cleanly
         """
         while True:
             for player in self.players:
@@ -162,6 +163,10 @@ class Game:
 
                 if player.balance < 0:
                     print("You are bankrupt.")
+                    for _ in player.properties:
+                        _.owner = None
+                        _.improvement_lvl = 0
+                        _.mortgaged = False
                     self.players.remove(player)
 
                 if len(self.players) == 1:
