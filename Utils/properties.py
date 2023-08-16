@@ -1,5 +1,6 @@
 import Models.Property
 
+
 def get_player_properties_names(player):
     properties = player.properties
     names = []
@@ -17,7 +18,7 @@ def get_player_properties(player):
     property_list = []
     for _ in player.properties:
         if _.property_type == "Street":
-            property_list.append(f"{_.name} - {_.property_type} - {_.improvement_lvl} Build houses? - {_.can_you_build_houses()}")
+            property_list.append(f"{_.name} - {_.property_type} - {_.improvement_lvl} Build houses? - {_.can_you_build_houses()}, Mortgage? - {_.mortgaged}")
         else:
             property_list.append(f"{_.name} - {_.property_type} - {_.improvement_lvl}")
 
@@ -122,3 +123,53 @@ def unmortgage(player):
         return "You've unmortgaged this property."
     else:
         return "You don't own this property, or it's already unmortgaged or invalid property name."
+
+
+def buy_property(location, player, all_players):
+    if player.balance < location.price:
+        return "You don't have enough money to buy this property."
+    else:
+        answer = input(f"Do you want to buy this property for ${location.price}? (yes/no): ")
+        if answer == "yes":
+            return buying(player, location)
+        if answer == "no":
+            return auction(all_players, location)
+
+
+def buying(player, location):
+    location.owner = player
+    player.properties.append(location)
+    player.remove_balance(location.price)
+    return "You now own this property."
+
+
+def auction(players, location):
+    highest_bid = 0
+    highest_bidder = None
+    players_left = []
+
+    for _ in players:
+        want_to_buy = input(f"Player {_.name}, do you want to participate in this auction? (yes/no): ")
+        if want_to_buy == "yes":
+            players_left.append(_)
+        if want_to_buy == "no":
+            continue
+
+    for _ in players_left:
+        print(f"Player {_.name} has {_.balance} balance.")
+        while True:
+            try:
+                bid = int(input(f"Player {_.name}, enter your bid: "))
+                if bid > _.balance:
+                    raise ValueError
+                break
+            except ValueError:
+                print("Enter a valid number.")
+        if bid > highest_bid:
+            highest_bid = bid
+            highest_bidder = _
+
+    highest_bidder.remove_balance(highest_bid)
+    highest_bidder.properties.append(location)
+    location.owner = highest_bidder
+    return f"Player {highest_bidder.name} won the auction with {highest_bid} bid."

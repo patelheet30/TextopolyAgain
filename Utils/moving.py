@@ -1,8 +1,8 @@
 from Models.Property import *
-from Utils.properties import check_type
+from Utils.properties import buy_property, check_type
 
 
-def check_movement(player, location, roll_tuple):
+def check_movement(player, location, roll_tuple, all_players):
 
     print("You rolled a", roll_tuple[0], "and a", roll_tuple[1])
     completed_roll_size = roll_tuple[0] + roll_tuple[1]
@@ -26,7 +26,7 @@ def check_movement(player, location, roll_tuple):
             print("You paid", determineRent(location, player, completed_roll_size), "to", is_owned.name)
             return
         else:
-            print(buy_property(location, player))
+            print(buy_property(location, player, all_players))
 
     return
 
@@ -51,9 +51,3 @@ def determineRent(location, player, roll_size):
     return rent_price
 
 
-def buy_property(location, player):
-    if player.balance < location.price:
-        return "You don't have enough money to buy this property."
-    else:
-        answer = input("Do you want to buy this property? (yes/no): ")
-        return location.buy(answer, player)

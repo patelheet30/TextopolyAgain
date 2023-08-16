@@ -53,15 +53,6 @@ class Street(Property):
     def is_mortgaged(self):
         return self.mortgaged
 
-    def buy(self, answer: str, player: Player):
-        if answer == "yes":
-            player.remove_balance(self._price)
-            self.owner = player
-            player.properties.append(self)
-            return "You now own this property."
-        else:
-            return "Going for auction..."
-
     def can_you_build_houses(self):
         player_colors = get_colors(self.owner)
         if self.color in player_colors:

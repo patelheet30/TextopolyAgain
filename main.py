@@ -37,7 +37,7 @@ def setup() -> Game:
 
 
 game = setup()
-players = game.players
-squares = game.squares
+players_in_game = game.players
+squares_in_game = game.squares
 
 game.start()

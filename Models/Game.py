@@ -100,8 +100,7 @@ class Game:
         2. Community Chest
         3. View other players properties
         4. Trade
-        5. Auction
-        6. A GUI to see information cleanly
+        5. A GUI to see information cleanly
         """
         while True:
             for player in self.players:
@@ -188,6 +187,6 @@ class Game:
 
             if check_type(location) == Tax:
                 location.pay_tax(player)
-            movement = check_movement(player, location, self._rolled_dice)
+            movement = check_movement(player, location, self._rolled_dice, self.players)
             if movement is not None:
                 print(movement)
