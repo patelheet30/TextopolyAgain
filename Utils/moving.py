@@ -22,8 +22,8 @@ def check_movement(player, location, roll_tuple, all_players):
                 print("This is your property.")
                 return
             print("This property is owned by", is_owned.name)
-            player.remove_balance((determineRent(location, player, completed_roll_size)))
-            print("You paid", determineRent(location, player, completed_roll_size), "to", is_owned.name)
+            player.remove_balance((determine_rent(location, player, completed_roll_size)))
+            print("You paid", determine_rent(location, player, completed_roll_size), "to", is_owned.name)
             return
         else:
             print(buy_property(location, player, all_players))
@@ -31,23 +31,15 @@ def check_movement(player, location, roll_tuple, all_players):
     return
 
 
-def determineRent(location, player, roll_size):
-    rent_price = 0
-    if location.is_mortgaged():
+def determine_rent(location, player, roll_size):
+    if location.is_mortgaged() or player == location.owner:
         return 0
-    utility_count = 0
-    if player != location.owner:
-        if location.property_type == "Utility":
-            for _ in location.owner.properties:
-                if isinstance(_, Utility):
-                    utility_count += 1
-            if utility_count == 1:
-                rent_price = roll_size * 4
-            elif utility_count == 2:
-                rent_price = roll_size * 10
-            return rent_price
-        rent_price = location.rent_levels[location.improvement_lvl]
-        return rent_price
-    return rent_price
 
+    if location.property_type == "Utility":
+        utility_count = sum(isinstance(_, Utility) for _ in location.owner.properties)
+        if utility_count == 1:
+            return roll_size * 4
+        elif utility_count == 2:
+            return roll_size * 10
 
+    return location.rent_levels[location.improvement_lvl]
