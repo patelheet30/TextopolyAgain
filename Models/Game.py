@@ -30,12 +30,16 @@ class Game:
             if ploc_in_squares + move_points > 39:
                 ploc_in_squares += (39 - ploc_in_squares)
                 ploc_in_squares = (ploc_in_squares + move_points) % 39
+                player.add_balance(200)
+                print("You passed go. You get $200.")
             else:
                 ploc_in_squares += move_points
 
             player.previous_dice_role = rolled_dice
             if player.double_roll_count == 3:
+                print("You rolled 3 doubles in a row. You are going to jail.")
                 player.change_location(self.squares[10])
+                player.location_number = 10
                 player.in_jail = True
                 player.jail_turns = 0
                 player.double_roll_count = 0
@@ -43,8 +47,12 @@ class Game:
 
             if not player.in_jail:
                 player.change_location(self.squares[ploc_in_squares])
-                if player.location == self.squares[29]:
+                player.location_number = ploc_in_squares
+                if player.location == self.squares[30]:
+                    print("You are going to jail.")
+                    print(f"You rolled a {rolled_dice[0]} and a {rolled_dice[1]}.")
                     player.location = self.squares[10]
+                    player.location_number = 10
                     player.in_jail = True
                     player.jail_turns = 0
                 return player.location.name
@@ -52,6 +60,7 @@ class Game:
                 self.jail_handler(player, rolled_dice)
 
     def jail_handler(self, player, dice_roll):
+        print(f"You've been in jail for {player.jail_turns} turns.")
         if player.jail_turns == 3:
             player.remove_balance(50)
             player.in_jail = False
@@ -77,6 +86,15 @@ class Game:
                     self.move_player(player, dice_roll)
                 else:
                     player.jail_turns += 1
+            if choices == 3:
+                if player.goojf_cards > 0:
+                    player.goojf_cards -= 1
+                    player.in_jail = False
+                    player.jail_turns = 0
+                    self.move_player(player, dice_roll)
+                else:
+                    print("You don't have a get out of jail free card.")
+                    player.jail_turns += 1
 
     def start(self):
         """
@@ -96,15 +114,14 @@ class Game:
         11. Continue # Done
 
         Add to the game:
-        1. Chance
-        2. Community Chest
-        3. View other players properties
-        4. Trade
-        5. A GUI to see information cleanly
+        1. View other players properties
+        2. Trade
+        3. A GUI to see information cleanly
         """
         while True:
             for player in self.players:
                 input("Enter to continue...")
+                print(f"Player {player.name}'s turn. You are on {player.location.name}.")
                 print(
                         """What would you like to do:
                      1. Roll dice
@@ -117,7 +134,8 @@ class Game:
                      8. Unmortgage properties
                      9. Sell properties
                      10. Color Group Information
-                     11. Continue
+                     11. View Cards
+                     12. Continue
                      """
                 )
                 move_on = False
@@ -154,11 +172,15 @@ class Game:
                     elif choices == 10:
                         print(get_colors(player))
                     elif choices == 11:
+                        print(f"You have {player.goojf_cards} get out of jail free cards.")
+                    elif choices == 12:
                         if rolled_dice:
                             move_on = True
                             print("Moving on...")
                         else:
                             print("You have to roll the dice first.")
+                    elif choices == 13:
+                        self.move_the_player(player)
 
                 if player.balance < 0:
                     print("You are bankrupt.")
@@ -182,11 +204,32 @@ class Game:
             else:
                 player.double_roll_count = 0
             self.move_player(player, self._rolled_dice)
-            location: Street | Utility | Railroad | Tax = player.location
+            location: Street | Utility | Railroad | Tax | ComChest | Chance = player.location
             check_type(location)
 
-            if check_type(location) == Tax:
-                location.pay_tax(player)
             movement = check_movement(player, location, self._rolled_dice, self.players)
             if movement is not None:
                 print(movement)
+
+            if check_type(location) == Tax:
+                location.pay_tax(player)
+                print(f"You paid {location.tax} in tax.")
+            elif check_type(location) == ComChest:
+                com_chest_card = location.perform_action(player, self.squares)
+                print(com_chest_card)
+            elif check_type(location) == Chance:
+                chance_card: Chance = location.perform_action(player, self.squares, self.players)
+                print(chance_card)
+
+
+    def update_com_chest_dict(self, com_chest_dict):
+        for square in self.squares:
+            if check_type(self.squares[square]) == ComChest:
+                self.squares[square].set_dict(com_chest_dict)
+        return "Community Chest Dictionary Updated"
+
+    def update_chance_dict(self, chance_dict):
+        for square in self.squares:
+            if check_type(self.squares[square]) == Chance:
+                self.squares[square].set_dict(chance_dict)
+        return "Chance Dictionary Updated"

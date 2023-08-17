@@ -35,7 +35,7 @@
     },
     7: {
         "name": "Bank pays you dividend of $50",
-        "type": "balance",
+        "type": "balanceadd",
         "value": 50
     },
     8: {
@@ -49,17 +49,17 @@
     },
     10: {
         "name": "Go Back 3 Spaces",
-        "type": "move",
-        "value": -3
+        "type": "moveremove",
+        "value": 3
     },
     11: {
         "name": "Speeding fine $15",
-        "type": "balance",
-        "value": -15
+        "type": "balanceremove",
+        "value": 15
     },
     12: {
         "name": "Your building loan matures." "\nCollect $150",
-        "type": "balance",
+        "type": "balanceadd",
         "value": 150,
     },
 }

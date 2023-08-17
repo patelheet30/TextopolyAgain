@@ -1,6 +1,7 @@
 from Models.Game import Game
 from Models.Player import Player
 from Utils.property_collection import load_squares
+from Utils.chance_and_com_collectors import load_chance_and_coms
 
 
 def setup() -> Game:
@@ -39,5 +40,9 @@ def setup() -> Game:
 game = setup()
 players_in_game = game.players
 squares_in_game = game.squares
+chance_cards, com_chest_cards = load_chance_and_coms()
+print(game.update_com_chest_dict(com_chest_cards))
+print(game.update_chance_dict(chance_cards))
+print("Game is ready to start.")
 
 game.start()

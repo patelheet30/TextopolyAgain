@@ -15,6 +15,8 @@ class Player:
         self.jail_turns = 0
         self.previous_dice_role = None
         self.double_roll_count = 0
+        self.goojf_cards = 0
+        self.location_number = 0
 
 
     @property

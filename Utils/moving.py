@@ -1,13 +1,15 @@
 from Models.Property import *
-from Utils.properties import buy_property, check_type
+from Utils.properties import check_type
 
 
 def check_movement(player, location, roll_tuple, all_players):
+    if player.in_jail:
+        print("You are in jail.")
+        return
 
     print("You rolled a", roll_tuple[0], "and a", roll_tuple[1])
     completed_roll_size = roll_tuple[0] + roll_tuple[1]
     print("You are now on", location.name)
-    print("You are on a", location.property_type)
 
     location_type = check_type(location)
 
@@ -26,7 +28,7 @@ def check_movement(player, location, roll_tuple, all_players):
             print("You paid", determine_rent(location, player, completed_roll_size), "to", is_owned.name)
             return
         else:
-            print(buy_property(location, player, all_players))
+            print(location.buy_property(player, all_players))
 
     return
 

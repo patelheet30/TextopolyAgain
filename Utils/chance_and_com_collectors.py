@@ -3,5 +3,6 @@ def load_chance_and_coms():
         chance = eval(chanceFile.read())
 
     with open("./Data/comchest.txt", "r") as comChestFile:
-        comChest = eval(comChestFile.read())
+        com_chest = eval(comChestFile.read())
 
+    return chance, com_chest
