@@ -99,26 +99,6 @@ class Game:
                     player.jail_turns += 1
 
     def start(self):
-        """
-        Choices:
-        1. Roll dice # Done
-        2. View your properties # Done - Clean Up
-        3. View your balance # Done
-        4. View your location # Done
-        5. Build houses/hotels # Done
-        6. Sell houses/hotel # Done
-        7. Mortgage properties # Done
-        8. Unmortgage properties # Done
-        9. Sell properties # Done
-        10. Color Group Information # Done
-        11. View Cards # Done
-        12. Trade # Done
-        13. View other players properties # Done
-        14. Continue # Done
-
-        Add to the game:
-        1. A GUI to see information cleanly
-        """
         while True:
             for player in self.players:
                 input("Enter to continue...")
