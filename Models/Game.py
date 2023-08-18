@@ -113,11 +113,11 @@ class Game:
         10. Color Group Information # Done
         11. View Cards # Done
         12. Trade # Done
-        13. Continue # Done
+        13. View other players properties # Done
+        14. Continue # Done
 
         Add to the game:
-        1. View other players properties
-        2. A GUI to see information cleanly
+        1. A GUI to see information cleanly
         """
         while True:
             for player in self.players:
@@ -137,7 +137,8 @@ class Game:
                      10. Color Group Information
                      11. View Cards
                      12. Trade
-                     13. Continue
+                     13. View other players properties
+                     14. Continue
                      """
                 )
                 move_on = False
@@ -183,6 +184,13 @@ class Game:
                         trade = Trade(player, player_to_trade_with, self.squares)
                         trade.start()
                     elif choices == 13:
+                        player_to_view = int(input("Who's properties do you want to view? (Enter player number): "))
+                        for view_player_properties in self.players:
+                            if view_player_properties.name == player_to_view:
+                                player_to_view = view_player_properties
+                        print(get_player_properties_names(player_to_view))
+                        print(get_player_properties(player_to_view))
+                    elif choices == 14:
                         if rolled_dice:
                             move_on = True
                             print("Moving on...")
