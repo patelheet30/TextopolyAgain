@@ -3,8 +3,10 @@ from Models.Property import Street, Tax, Utility, Railroad, ComChest, Chance, Co
 from Utils.properties import get_player_properties_names, check_type, get_player_properties, get_colors, build_house, \
     remove_house, sell_property, mortgage, unmortgage
 from Utils.moving import check_movement
+from Models.Trade import Trade
 
 from random import randint
+
 
 
 class Game:
@@ -109,14 +111,13 @@ class Game:
         8. Unmortgage properties # Done
         9. Sell properties # Done
         10. Color Group Information # Done
-        11. Trade # Not Done
-        12. View other players properties # Not Done
-        11. Continue # Done
+        11. View Cards # Done
+        12. Trade # Done
+        13. Continue # Done
 
         Add to the game:
         1. View other players properties
-        2. Trade
-        3. A GUI to see information cleanly
+        2. A GUI to see information cleanly
         """
         while True:
             for player in self.players:
@@ -135,7 +136,8 @@ class Game:
                      9. Sell properties
                      10. Color Group Information
                      11. View Cards
-                     12. Continue
+                     12. Trade
+                     13. Continue
                      """
                 )
                 move_on = False
@@ -174,13 +176,18 @@ class Game:
                     elif choices == 11:
                         print(f"You have {player.goojf_cards} get out of jail free cards.")
                     elif choices == 12:
+                        player_to_trade_with = int(input("Who do you want to trade with? (Enter player number): "))
+                        for trade_player in self.players:
+                            if trade_player.name == player_to_trade_with:
+                                player_to_trade_with = trade_player
+                        trade = Trade(player, player_to_trade_with, self.squares)
+                        trade.start()
+                    elif choices == 13:
                         if rolled_dice:
                             move_on = True
                             print("Moving on...")
                         else:
                             print("You have to roll the dice first.")
-                    elif choices == 13:
-                        self.move_the_player(player)
 
                 if player.balance < 0:
                     print("You are bankrupt.")
